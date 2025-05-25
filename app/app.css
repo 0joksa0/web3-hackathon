@@ -7,9 +7,34 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-white dark:bg-black;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+section{
+    @apply min-h-[80vh];
+    @apply w-[90vw];
+    @apply m-auto;
+    @apply my-10;
 }
+
+h1{
+    @apply font-bold;
+    @apply text-7xl;
+}
+
+
+.gradient-bg {
+  background: linear-gradient(90deg,
+    #FF006A 0%,
+    #D44ED5 30%,
+    #9A57F1 60%,
+    #F78DA7 80%,
+    #FF8500 100%);
+  color: white;
+  border-radius: 2rem 0rem 0rem 2rem;
+  box-shadow: 0 0 10px rgba(255, 0, 106, 0.3);
+}
+}
+

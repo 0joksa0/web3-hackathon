@@ -11,9 +11,11 @@
   "dependencies": {
     "@react-router/node": "^7.5.3",
     "isbot": "^5.1.27",
+    "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.5.3"
+    "react-router": "^7.5.3",
+    "web3": "^4.16.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.5.3",
@@ -21,6 +23,7 @@
     "@types/node": "^20",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@types/web3": "^1.0.20",
     "@vercel/react-router": "^1.1.0",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",

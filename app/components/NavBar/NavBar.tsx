@@ -1,29 +1,73 @@
-import React from 'react'
-import { Route, Routes, useNavigate } from 'react-router'
-import ConnectButton from '../ConnectButton/ConnectButton';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { Menu, X } from "lucide-react";
+import ConnectButton from "../ConnectButton/ConnectButton";
+import { useWallet } from "~/utils/WalletProvider";
 
-function NavBar() {
-    
-    const navigate = useNavigate();
+export default function NavBar() {
+  const navigate            = useNavigate();
+  const { address }         = useWallet();
+  const [open, setOpen]     = useState(false);          
+  const navItems = [
+    { label: "Home",  to: "/"     },
+    { label: "About", to: "/about"}
+  ];
 
+  const NavLink = ({ to, label }: { to: string; label: string }) => (
+    <button
+      onClick={() => {
+        setOpen(false);
+        navigate(to);
+      }}
+      className="py-2 px-3 rounded hover:opacity-80 transition text-white text-lg"
+    >
+      {label}
+    </button>
+  );
 
   return (
-    <nav className=' mt-10  font-bold text-xl flex items-center justify-between self-end'>
-            <h1 className='ml-[10vh] shrink'>
-                NAME
-            </h1>
-            <div className='gradient-bg shrink-0 min-w-fit w-1/2 p-2 flex items-center justify-around'>
-            <button onClick={()=> navigate("/")}>
-                Home
-            </button>
-            <button onClick={()=> navigate("/about")}>
-               About 
-            </button>
-            <ConnectButton  className='border-2 p-2 border-gray-950 rounded-xl hover:bg-gray-950'/>
-            </div>
-    </nav>
+    <header className="w-full bg-transparent">
+      <nav className="hidden md:flex items-center justify-between mt-10  font-bold text-xl ">
+        <h1 className="shrink-0 ml-10">NAME</h1>
 
-  )
+        <div className="gradient-bg flex items-center gap-6 px-6 py-2 rounded-full self-end">
+          {navItems.map((i) => (
+            <NavLink key={i.label} {...i} />
+          ))}
+
+          {address ? <div /> : <div />}
+
+          <ConnectButton className="border-2 border-gray-950 hover:bg-gray-950 px-3 py-1 rounded" />
+        </div>
+      </nav>
+
+      <nav className="flex md:hidden items-center justify-between mt-6 px-6">
+        <h1 className="text-xl font-bold">NAME</h1>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="p-2 rounded hover:bg-white/10 transition"
+        >
+          {open ? <X size={26} /> : <Menu size={26} />}
+        </button>
+      </nav>
+
+      <div
+        className={`
+          md:hidden
+          ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+          overflow-hidden transition-all duration-300
+        `}
+      >
+        <div className="mt-4 mx-6 flex flex-col gap-4 bg-[#111]/70 backdrop-blur rounded-xl p-6">
+          {navItems.map((i) => (
+            <NavLink key={i.label} {...i} />
+          ))}
+
+          <ConnectButton className="w-full border-2 border-gray-950 hover:bg-gray-950 py-2 rounded" />
+        </div>
+      </div>
+    </header>
+  );
 }
 
-export default NavBar

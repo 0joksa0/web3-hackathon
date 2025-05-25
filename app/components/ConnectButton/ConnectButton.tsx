@@ -1,31 +1,44 @@
-import { useState } from "react";
-import { connectWallet } from "~/utils/wallet";
+import Jazzicon from "@metamask/jazzicon";  
+import { useEffect, useRef } from "react";
+import { useWallet } from "~/utils/WalletProvider";
 
+export default function ConnectButton({ className = "" }: { className?: string }) {
+  const { address, connect } = useWallet();
+  const avatarRef = useRef<HTMLDivElement>(null);
 
-function ConnectButton({className = ""}){
-    const [address, setAddress] = useState(null);
+  useEffect(() => {
+    if (address && avatarRef.current) {
+      const seed = parseInt(address.slice(2, 10), 16);
+      avatarRef.current.innerHTML = "";         // clear
+      avatarRef.current.appendChild(Jazzicon(16, seed));
+    }
+  }, [address]);
 
-    const handleConnect = async () => {
-        try{
-        const {address} = await connectWallet();
-        setAddress(address);
-        
-        }catch( err :any){
-            alert((err as Error).message);
+  return (
+    <button
+      onClick={connect}
+      className={`
+        relative inline-flex items-center gap-2
+        rounded-[2rem] px-5 py-2
+        font-semibold 
+        transition
+        hover:scale-[1.03]
+        ${address
+          ? "bg-black text-white border border-cyan-400/30 hover:shadow-[0_0_8px_#00e0ff66]"
+          : "text-white shadow-lg"
         }
-    };
+        ${className}
+      `}
+    >
+      {address && (
+        <span
+          ref={avatarRef}
+          className="w-4 h-4 rounded-full overflow-hidden shrink-0"
+        />
+      )}
 
-
-
-
-return(
-  <button onClick={handleConnect} className={`base-connect-style ${className}`}>
-      {address ? `${(address as String).slice(0, 6)}...` : "Connect Wallet"}
+      {address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "Connect Wallet"}
     </button>
-
-);
+  );
 }
-
-export default ConnectButton;
-
 

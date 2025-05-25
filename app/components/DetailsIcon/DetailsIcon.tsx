@@ -22,13 +22,14 @@ function DetailsIcon({ passportData = {
     return (
         <div
             key={passportData.id}
-            className="flex gap-4 items-center"
+            className="flex gap-10 items-center"
         >
 
-                <Icon className="text-white" size={200} />
+            <Icon className="w-12 h-12 md:w-15 md:h-15 text-white shrink-0 object-contain" />
+
             <div >
                 <h3 className="text-xl font-semibold text-white">{passportData.title}</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">{passportData.description}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">{passportData.description}</p>
             </div>
         </div>
     )

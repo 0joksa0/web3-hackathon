@@ -63,29 +63,29 @@ export function loader({ context }: Route.LoaderArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
     return (<div className="overflow-x-hidden">
         <NavBar />
-        <section className="flex justify-between items-center " >
-            <div className="w-1/2 ">
+        <section className="flex flex-col-reverse justify-between items-center md:flex-row" >
+            <div className="w-1/1 md:w-1/2 ">
                 <h1 className="">{loaderData.hero.header}</h1>
                 <p>{loaderData.hero.desc}</p>
             </div>
-            <div className="flex gap-1 bg-black p-6 h-[70vh]">
+            <div className="flex gap-1 bg-black p-6 h-full w-[50vh] md:w-auto md:h-[70vh]">
                 <img
                     src="/hero.jpg"
-                    className="w-[30vw] h-auto object-cover [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] shadow-xl"
+                    className="md:w-[30vw] h-[40vh] md:h-auto object-cover [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] "
                     alt="Car 1"
                 />
                 <img
                     src="/hero.jpg"
-                    className="w-[30vw] h-auto object-cover [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] shadow-xl"
+                    className="md:w-[30vw] h-auto object-cover [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] "
                     alt="Car 1"
                 />
             </div>
 
         </section>
         <SectionBrake className="rotate-180" />
-        <section className="flex flex-col justify-center items-center">
-            <h1>{loaderData.ovnersihpRecords.sectionTitle}</h1>
-            <div className="grid grid-cols-3 gap-10 mt-10">
+        <section className="flex flex-col md:justify-evenly justify-center items-center">
+            <h1 className="text-center md:text-left">{loaderData.ovnersihpRecords.sectionTitle}</h1>
+            <div className="grid grid-cols-1 gap:1 md:grid-cols-3 gap-10 mt-10">
 
             {loaderData.ovnersihpRecords.sections.map(
                 (item) => (

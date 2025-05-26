@@ -1,4 +1,4 @@
-import { Car, Wrench, Users, ClipboardCheck, ShieldCheck } from 'lucide-react'
+import { Car, Wrench, Users, ClipboardCheck, ShieldCheck, Layers3, HeartHandshake, Globe2 } from 'lucide-react'
 import React from 'react'
 
 
@@ -8,7 +8,7 @@ const iconMap: Record<string, React.ElementType> = {
     Wrench,
     Users,
     ClipboardCheck,
-    ShieldCheck,
+    ShieldCheck, Layers3, HeartHandshake, Globe2,
 }
 
 

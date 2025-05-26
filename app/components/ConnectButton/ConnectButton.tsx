@@ -18,7 +18,7 @@ export default function ConnectButton({ className = "" }: { className?: string }
     <button
       onClick={connect}
       className={`
-        relative inline-flex items-center gap-2
+        relative inline-flex items-center justify-center gap-2 text-center
         rounded-[2rem] px-5 py-2
         font-semibold 
         transition

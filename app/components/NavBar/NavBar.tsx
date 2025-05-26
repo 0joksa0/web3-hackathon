@@ -26,8 +26,8 @@ export default function NavBar() {
   );
 
   return (
-    <header className="w-full bg-transparent">
-      <nav className="hidden md:flex items-center justify-between mt-10  font-bold text-xl ">
+    <header className="w-full bg-transparent snap-start">
+      <nav className="hidden md:flex items-center justify-between mt-10 pt-10  font-bold text-xl ">
         <h1 className="shrink-0 ml-10">NAME</h1>
 
         <div className="gradient-bg flex items-center gap-6 px-6 py-2 rounded-full self-end">
@@ -41,7 +41,7 @@ export default function NavBar() {
         </div>
       </nav>
 
-      <nav className="flex md:hidden items-center justify-between mt-6 px-6">
+      <nav className="flex md:hidden items-center justify-between pt-4 px-6">
         <h1 className="text-xl font-bold">NAME</h1>
 
         <button
@@ -64,7 +64,7 @@ export default function NavBar() {
             <NavLink key={i.label} {...i} />
           ))}
 
-          <ConnectButton className="w-full border-2 border-gray-950 hover:bg-gray-950 py-2 rounded" />
+          <ConnectButton className="border-2 border-gray-950 hover:bg-gray-950 py-2 rounded" />
         </div>
       </div>
     </header>

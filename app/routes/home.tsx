@@ -4,6 +4,7 @@ import NavBar from "~/components/NavBar/NavBar";
 import type { warn } from "console";
 import SectionBrake from "~/components/SectionBrake/SectionBrake";
 import DetailsIcon from "~/components/DetailsIcon/DetailsIcon";
+import Footer from "~/components/Footer/Footer";
 
 
 export function meta({ }: Route.MetaArgs) {
@@ -19,7 +20,7 @@ export function loader({ context }: Route.LoaderArgs) {
             header: "CAR DEALER PRESENTATION",
             desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt quae sint officia enim quam beatae distinctio eligendi neque consequuntur incidunt rerum porro, nostrum inventore eius commodi omnis mollitia quibusdam recusandae.",
         },
-        ovnersihpRecords: {
+        ownershipRecords: {
             "sectionTitle": "Your Vehicle Passport",
             "sectionDescription": "Explore the full digital identity of your vehicle — stored and verified on-chain for transparency, trust, and sustainability.",
 
@@ -61,14 +62,14 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-    return (<div className="overflow-x-hidden">
+    return (<div className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-mandatory">
         <NavBar />
-        <section className="flex flex-col-reverse justify-between items-center md:flex-row" >
+        <section className="flex flex-col-reverse justify-between items-center md:flex-row snap-none" >
             <div className="w-1/1 md:w-1/2 ">
                 <h1 className="">{loaderData.hero.header}</h1>
                 <p>{loaderData.hero.desc}</p>
             </div>
-            <div className="flex gap-1 bg-black p-6 h-full w-[50vh] md:w-auto md:h-[70vh]">
+            <div className="flex gap-[1rem] bg-black p-6 h-full w-[50vh] md:w-auto md:h-[70vh]">
                 <img
                     src="/hero.jpg"
                     className="md:w-[30vw] h-[40vh] md:h-auto object-cover [clip-path:polygon(15%_0%,100%_0%,85%_100%,0%_100%)] "
@@ -83,20 +84,21 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
         </section>
         <SectionBrake className="rotate-180" />
-        <section className="flex flex-col md:justify-evenly justify-center items-center">
-            <h1 className="text-center md:text-left">{loaderData.ovnersihpRecords.sectionTitle}</h1>
-            <div className="grid grid-cols-1 gap:1 md:grid-cols-3 gap-10 mt-10">
+        <section className="flex flex-col md:justify-evenly justify-center items-center snap-center">
+            <h1 className="text-center md:text-left">{loaderData.ownershipRecords.sectionTitle}</h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
 
-            {loaderData.ovnersihpRecords.sections.map(
-                (item) => (
-                    <DetailsIcon key={item.id} passportData={item} />
-                )
-            )}
+                {loaderData.ownershipRecords.sections.map(
+                    (item) => (
+                        <DetailsIcon key={item.id} passportData={item} />
+                    )
+                )}
 
             </div>
 
         </section>
         <SectionBrake className="ml-auto" />
+        <Footer />
     </div>
     );
 }

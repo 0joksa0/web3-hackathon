@@ -8,10 +8,12 @@ export default function NavBar() {
   const navigate            = useNavigate();
   const { address }         = useWallet();
   const [open, setOpen]     = useState(false);          
-  const navItems = [
+  let navItems = [
     { label: "Home",  to: "/"     },
     { label: "About", to: "/about"}
   ];
+
+   if (address) navItems.push({label:"Dashboard", to:"/dashboard"}) 
 
   const NavLink = ({ to, label }: { to: string; label: string }) => (
     <button
@@ -27,7 +29,7 @@ export default function NavBar() {
 
   return (
     <header className="w-full bg-transparent snap-start">
-      <nav className="hidden md:flex items-center justify-between mt-10 pt-10  font-bold text-xl ">
+      <nav className="hidden md:flex items-center justify-between  pt-10  font-bold text-xl ">
         <h1 className="shrink-0 ml-10">NAME</h1>
 
         <div className="gradient-bg flex items-center gap-6 px-6 py-2 rounded-full self-end">

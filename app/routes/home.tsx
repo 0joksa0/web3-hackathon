@@ -9,7 +9,7 @@ import Footer from "~/components/Footer/Footer";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
+        { title: "Home • Car Passport" },
         { name: "description", content: "Welcome to React Router!" },
     ];
 }
@@ -62,7 +62,7 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-    return (<div className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-mandatory">
+    return (<main className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-mandatory">
         <NavBar />
         <section className="flex flex-col-reverse justify-between items-center md:flex-row snap-none" >
             <div className="w-1/1 md:w-1/2 ">
@@ -99,7 +99,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </section>
         <SectionBrake className="ml-auto" />
         <Footer />
-    </div>
+    </main>
     );
 }
 

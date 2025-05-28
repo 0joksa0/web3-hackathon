@@ -18,36 +18,37 @@ contract VehiclePassport is AccessControl {
     /* ipfs CID, part, note… stanu u 32 B */
     struct Maintenance {
         uint40   ts;
-        bytes32  partCid;
+        bytes32  part;
         string partIpfs;
-        bytes32  noteCid;
+        bytes32  note;
         address  mechanic;
     }
 
     struct Diagnostic {
         uint40   ts;
-        bytes32  cid;        // OBD JSON
-        bytes32  summaryCid; // summary string hashed to CID-like bytes
+        string digIpfs;        // OBD JSON
+        bytes32  summary; // summary string hashed to CID-like bytes
         address  mechanic;
     }
 
     struct Inspection {
         uint40  ts;
         bool    passed;
-        bytes32 cid;
+        string  insIpfs;
         address inspector;
     }
 
     struct Accident {
         uint40  ts;
-        bytes32 photoCid;
-        bytes32 descCid;
+        string accIpfs;
+        string desc;
         address reporter;
     }
 
     struct VehicleMeta {
         address currentOwner;
         uint16  year;
+        uint32 mileage; 
     }
 
     /* ---------------- storage layout --------------- */
@@ -58,15 +59,17 @@ contract VehiclePassport is AccessControl {
     mapping(bytes17 => Diagnostic[])  public diags;
     mapping(bytes17 => Inspection[])  public insps;
     mapping(bytes17 => Accident[])    public accs;
+    mapping(address => bytes17[]) public ownerToVins;
+
 
     /* ---------------- events ----------------------- */
     event VehicleRegistered(bytes17 indexed vin, address indexed owner);
     event OwnershipTransferred(bytes17 indexed vin, address indexed from, address indexed to);
 
     event MaintenanceAdded(bytes17 vin, bytes32 partCid, bytes32 noteCid);
-    event DiagnosticAdded(bytes17 vin, bytes32 cid, bytes32 summaryCid);
-    event InspectionAdded(bytes17 vin, bool passed, bytes32 cid);
-    event AccidentReported(bytes17 vin, bytes32 photoCid, bytes32 descCid);
+    event DiagnosticAdded(bytes17 vin, string cid, bytes32 summaryCid);
+    event InspectionAdded(bytes17 vin, bool passed, string cid);
+    event AccidentReported(bytes17 vin, string photoCid, string descCid);
 
     /* ---------------- constructor ------------------ */
     constructor() {
@@ -85,12 +88,13 @@ contract VehiclePassport is AccessControl {
     }
 
     /* ---------------- admin ------------------------ */
-    function registerVehicle(bytes17 vin, address firstOwner, uint16 year)
+    function registerVehicle(bytes17 vin, address firstOwner, uint16 year, uint32 mileage)
         external
     {
         require(meta[vin].currentOwner == address(0), "VIN exists");
-        meta[vin] = VehicleMeta(firstOwner, year);
+        meta[vin] = VehicleMeta(firstOwner, year, mileage);
         owners[vin].push(OwnershipLog(firstOwner, uint40(block.timestamp), 0));
+        ownerToVins[firstOwner].push(vin);
         emit VehicleRegistered(vin, firstOwner);
     }
 
@@ -100,43 +104,51 @@ contract VehiclePassport is AccessControl {
         vehicleExists(vin)
         onlyVehicleOwner(vin)
     {
+        _removeVinFromOwner(msg.sender, vin);
         OwnershipLog[] storage h = owners[vin];
         h[h.length - 1].to = uint40(block.timestamp);
         h.push(OwnershipLog(newOwner, uint40(block.timestamp), 0));
+        ownerToVins[newOwner].push(vin);
         meta[vin].currentOwner = newOwner;
         emit OwnershipTransferred(vin, msg.sender, newOwner);
     }
 
     /* ---------------- mechanic --------------------- */
-    function addMaintenance(bytes17 vin, bytes32 partCid,string memory partIpfs, bytes32 noteCid)
+    function addMaintenance(bytes17 vin, bytes32 partCid, string memory partIpfs, bytes32 noteCid, uint32 mileage)
         external
         vehicleExists(vin)
         onlyRole(MECHANIC_ROLE)
     {
+        require(mileage>= meta[vin].mileage, "Can only increase");
+        meta[vin].mileage = mileage;
         maints[vin].push(Maintenance(uint40(block.timestamp), partCid, partIpfs, noteCid, msg.sender));
         emit MaintenanceAdded(vin, partCid, noteCid);
     }
 
-    function addDiagnostic(bytes17 vin, bytes32 cid, bytes32 summaryCid)
+    function addDiagnostic(bytes17 vin, string memory cid, bytes32 summaryCid, uint32 mileage)
         external
         vehicleExists(vin)
         onlyRole(MECHANIC_ROLE)
     {
+        require(mileage>= meta[vin].mileage, "Can only increase");
+        meta[vin].mileage = mileage;
         diags[vin].push(Diagnostic(uint40(block.timestamp), cid, summaryCid, msg.sender));
         emit DiagnosticAdded(vin, cid, summaryCid);
     }
 
     /* ---------------- police ----------------------- */
-    function addInspection(bytes17 vin, bool passed, bytes32 cid)
+    function addInspection(bytes17 vin, bool passed, string memory cid, uint32 mileage)
         external
         vehicleExists(vin)
         onlyRole(POLICE_ROLE)
     {
+        require(mileage>= meta[vin].mileage, "Can only increase");
+        meta[vin].mileage = mileage;
         insps[vin].push(Inspection(uint40(block.timestamp), passed, cid, msg.sender));
         emit InspectionAdded(vin, passed, cid);
     }
 
-    function reportAccident(bytes17 vin, bytes32 photoCid, bytes32 descCid)
+    function reportAccident(bytes17 vin, string memory photoCid, string memory descCid)
         external
         vehicleExists(vin)
         onlyRole(POLICE_ROLE)
@@ -153,6 +165,7 @@ contract VehiclePassport is AccessControl {
         returns (
             address owner,
             uint16  year,
+            uint32  mileage,
             uint32  maintCnt,
             uint32  diagCnt,
             uint32  inspCnt,
@@ -163,13 +176,24 @@ contract VehiclePassport is AccessControl {
         return (
             m.currentOwner,
             m.year,
+            m.mileage,
             uint32(maints[vin].length),
             uint32(diags[vin].length),
             uint32(insps[vin].length),
             uint32(accs[vin].length)
         );
     }
-
+function _removeVinFromOwner(address owner, bytes17 vin) internal {
+    bytes17[] storage arr = ownerToVins[owner];
+    for (uint i = 0; i < arr.length; i++) {
+        if (arr[i] == vin) {
+            // swap with last and pop
+            arr[i] = arr[arr.length - 1];
+            arr.pop();
+            break;
+        }
+    }
+}
     /* view arrays ostaju iste signaturno,
        ali sada vraćaju optimizirane strukture */
     function getMaintenance(bytes17 vin) external view returns (Maintenance[] memory) { return maints[vin]; }
@@ -177,5 +201,8 @@ contract VehiclePassport is AccessControl {
     function getInspections(bytes17 vin)  external view returns (Inspection[] memory){ return insps[vin]; }
     function getAccidents(bytes17 vin)    external view returns (Accident[] memory)  { return accs[vin]; }
     function getOwnershipHistory(bytes17 vin) external view returns (OwnershipLog[] memory) { return owners[vin]; }
+function getMyVehicles() external view returns (bytes17[] memory) {
+    return ownerToVins[msg.sender];
+}
 }
 

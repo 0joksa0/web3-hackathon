@@ -11,7 +11,7 @@ export function VinInput({ vin, setVin, onLoad }: {
       />
       <button
         onClick={onLoad}
-        className="rounded bg-cyan-600 px-5 font-semibold hover:bg-cyan-500 transition"
+        className="btn-primary"
       >
         Load
       </button>

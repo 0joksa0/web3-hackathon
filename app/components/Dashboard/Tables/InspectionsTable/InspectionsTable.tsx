@@ -12,7 +12,19 @@ export function InspectionsTable({ rows }: { rows: any[] }) {
       rows={rows.map((r) => ({
         Timestamp: format(new Date(Number(r.ts) * 1000), "dd.MM.yyyy HH:mm"),
         Passed: r.passed ? "✅ Yes" : "❌ No",
-        "Report CID": <span className="text-xs break-all">{r.cid}</span>,
+        "Report CID": (
+                    <div className="flex items-center gap-2">
+                        <a
+                            href={`https://ipfs.io/ipfs/${r.insIpfs}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-400 hover:text-blue-600"
+                            title="View on IPFS"
+                        >
+                            <Eye size={16} />
+                        </a>
+                    </div>
+                ),
         Inspector: <span className="text-xs break-all">{r.inspector}</span>,
       }))}
     />

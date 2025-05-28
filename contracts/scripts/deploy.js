@@ -26,16 +26,17 @@ async function main() {
 
   // ▶︎ opcionalno – grant prve role odmah
   const MECH_ROLE = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("MECHANIC_ROLE"));
-  // const POLI_ROLE = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("POLICE_ROLE"));
+   const POLI_ROLE = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("POLICE_ROLE"));
   //
-  await vp.grantRole(MECH_ROLE, "0xad9BcAca257c7598EeB5eb0D8749Ec501bEdc932");
-  // await vp.grantRole(POLI_ROLE, "0xPoliceAddr…");
+  await vp.grantRole(MECH_ROLE, "0xC71386e73e4C0A4E54D85376BC2Ba455537e2d5E");
+   await vp.grantRole(POLI_ROLE, "0xed199BbC85a4f037d6f152C79698496dcAEc0012");
   //
   console.log("Initial roles granted.");
 const res = await vp.registerVehicle(
         vinToBytes17("VIN-test"),
-        "0xad9BcAca257c7598EeB5eb0D8749Ec501bEdc932",
-        2001
+        "0xF998908b7Ed5575410Ac6AC6Fa1E9e1d45c07828",
+        2001, 
+        10000
     )
   console.log(res);
 }

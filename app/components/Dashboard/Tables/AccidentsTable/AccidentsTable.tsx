@@ -13,7 +13,7 @@ export function AccidentsTable({ rows }: { rows: any[] }) {
         Timestamp: format(new Date(Number(r.ts) * 1000), "dd.MM.yyyy HH:mm"),
         Photo: (
           <a
-            href={`https://ipfs.io/ipfs/${r.photoCid}`}
+            href={`https://ipfs.io/ipfs/${r.accIpfs}`}
             target="_blank"
             rel="noreferrer"
             title="View Photo"
@@ -21,7 +21,7 @@ export function AccidentsTable({ rows }: { rows: any[] }) {
             <Eye size={16} />
           </a>
         ),
-        Description: <span className="text-xs break-all">{r.descCid}</span>,
+        Description: <span className="text-xs break-all">{r.desc}</span>,
         Reporter: <span className="text-xs break-all">{r.reporter}</span>,
       }))}
     />

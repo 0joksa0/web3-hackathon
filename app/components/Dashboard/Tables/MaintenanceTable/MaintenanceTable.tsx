@@ -15,7 +15,7 @@ export function MaintenanceTable({ rows }: { rows: any[] }) {
                 Timestamp: format(new Date(Number(r.ts) * 1000), "dd.MM.yyyy HH:mm"),
                 "Part (CID/IPFS)": (
                     <div className="flex items-center gap-2">
-                        <span className="text-xs break-all">{bytes32ToStr(r.partCid)}</span>
+                        <span className="text-xs break-all">{bytes32ToStr(r.part)}</span>
                         <a
                             href={`https://ipfs.io/ipfs/${r.partIpfs}`}
                             target="_blank"
@@ -27,7 +27,7 @@ export function MaintenanceTable({ rows }: { rows: any[] }) {
                         </a>
                     </div>
                 ),
-                "Note (CID)": <span className="text-xs break-all">{bytes32ToStr(r.noteCid)}</span>,
+                "Note (CID)": <span className="text-xs break-all">{bytes32ToStr(r.note)}</span>,
                 Mechanic: <span className="text-xs break-all">{r.mechanic}</span>,
             }))}
         />

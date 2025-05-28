@@ -37,11 +37,52 @@ h1{
   border-radius: 2rem 0rem 0rem 2rem;
   box-shadow: 0 0 10px rgba(255, 0, 106, 0.3);
 }
+.gradient-button{
 
+  background: #9A57F1 ;
+  color: white;
+  border-radius: 2rem 2rem 2rem 2rem;
+    }
 
     /* global.css */
 .input { @apply w-full rounded bg-[#111] p-2 text-xs outline-none focus:ring-2 focus:ring-cyan-600; }
 .btn   { @apply flex items-center gap-2 rounded bg-cyan-600 px-4 py-2 text-sm font-semibold hover:bg-cyan-500 transition; }
+
+
+/* form cards */
+.form-card {
+  @apply bg-[#111]/50 backdrop-blur p-6 rounded-xl space-y-4;
+}
+
+/* form labels */
+.form-label {
+  @apply block text-sm font-medium text-gray-300;
+}
+
+/* text inputs & textarea */
+.form-input {
+  @apply mt-1 block w-full bg-[#222]/30 text-white placeholder-gray-400
+         px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+/* file inputs */
+.form-file {
+  @apply block w-full text-sm text-gray-200
+         file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+         file:bg-white/10 file:text-gray-200 hover:file:bg-white/20;
+}
+
+/* primary button */
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700
+         text-white font-semibold rounded-lg transition;
+}
+
+/* secondary button (cancel, back…) */
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600
+         text-white font-semibold rounded-lg transition;
+}
 
 }
 

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import { Link, useNavigate } from "react-router";
 import { Menu, X } from "lucide-react";
 import ConnectButton from "../ConnectButton/ConnectButton";
 import { useWallet } from "~/utils/WalletProvider";
+import { RoleBadge } from "../Dashboard/RoleBadge/RoleBadge";
 
-export default function NavBar() {
+export default function NavBar({roleBadge} : {roleBadge : ReactElement}) {
   const navigate            = useNavigate();
   const { address }         = useWallet();
   const [open, setOpen]     = useState(false);          
@@ -38,7 +39,7 @@ export default function NavBar() {
           ))}
 
           {address ? <div /> : <div />}
-
+            {roleBadge ? roleBadge : <></>}
           <ConnectButton className="border-2 border-gray-950 hover:bg-gray-950 px-3 py-1 rounded" />
         </div>
       </nav>
@@ -66,6 +67,7 @@ export default function NavBar() {
             <NavLink key={i.label} {...i} />
           ))}
 
+            {roleBadge ? roleBadge : <></>}
           <ConnectButton className="border-2 border-gray-950 hover:bg-gray-950 py-2 rounded" />
         </div>
       </div>

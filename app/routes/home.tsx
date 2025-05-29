@@ -62,7 +62,7 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-    return (<main className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-mandatory">
+    return (<main className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-proximity">
         <NavBar />
         <section className="flex flex-col-reverse justify-between items-center md:flex-row snap-none" >
             <div className="w-1/1 md:w-1/2 ">

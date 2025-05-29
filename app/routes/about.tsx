@@ -38,9 +38,9 @@ export function loader({ context }: Route.LoaderArgs) {
         ],
         teamTitle: "The team",
         team: [
-            { name: "", role: "", avatar: "" },
-            { name: "", role: "", avatar: "" },
-            { name: "", role: "", avatar: "" },
+            { name: "Hesam Jafazadeh", role: "", avatar: "./hesam.jpeg" },
+            { name: "Aleksandar Joksimović", role: "", avatar: "./joksa.jpeg" },
+            { name: "Radovan Marković", role: "", avatar: "./radovan.jpeg" },
         ],
         callTitle:"Join us on the road to transparent mobility",
         callDes:"We’re open-sourcing the protocol. Contributors and early pilot partners welcome!",
@@ -51,7 +51,7 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export default function About({ loaderData }: Route.ComponentProps) {
     return (
-        <main className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-mandatory">
+        <main className="overflow-x-hidden h-screen overflow-y-auto snap-y snap-proximity">
             <NavBar />
             <section className="relative flex flex-col items-center justify-center py-32 text-center">
                 <h1 className="py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-orange-400 bg-clip-text text-transparent">
@@ -91,9 +91,9 @@ export default function About({ loaderData }: Route.ComponentProps) {
                             <img
                                 src={m.avatar}
                                 alt={m.name}
-                                className="w-28 h-28 rounded-full object-cover border border-gray-600 shadow-lg"
+                                className="w-28 h-28 md:w-40 md:h-40 rounded-full object-cover border border-gray-600 shadow-lg"
                             />
-                            <p className="mt-4 font-semibold">{m.name}</p>
+                            <p className="mt-6 text-xl font-semibold">{m.name}</p>
                             <p className="text-sm text-gray-400">{m.role}</p>
                         </div>
                     ))}
@@ -102,21 +102,6 @@ export default function About({ loaderData }: Route.ComponentProps) {
 
             <SectionBrake className="rotate-180" />
             {/* call-to-action */}
-            <section className="flex flex-col justify-center items-center snap-center">
-                <h2 className="text-3xl md:text-4xl font-bold">
-                   {loaderData.callTitle} 
-                </h2>
-                <p className="mt-4 text-gray-400">
-                    {loaderData.callDes}
-                </p>
-                <a
-                    href={loaderData.callLink}
-                    className="mt-8 inline-block rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-orange-400 px-8 py-3 font-semibold hover:scale-[1.03] transition"
-                >
-                    {loaderData.callButton}
-                </a>
-            </section>
-            <SectionBrake className="ml-auto" />
             <Footer />
         </main>
     );

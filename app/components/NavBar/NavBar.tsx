@@ -31,7 +31,7 @@ export default function NavBar({roleBadge} : {roleBadge : ReactElement}) {
   return (
     <header className="w-full bg-transparent snap-start">
       <nav className="hidden md:flex items-center justify-between  pt-10  font-bold text-xl ">
-        <h1 className="shrink-0 ml-10">NAME</h1>
+        <h1 className="shrink-0 ml-10">DriveChain</h1>
 
         <div className="gradient-bg flex items-center gap-6 px-6 py-2 rounded-full self-end">
           {navItems.map((i) => (
@@ -45,7 +45,7 @@ export default function NavBar({roleBadge} : {roleBadge : ReactElement}) {
       </nav>
 
       <nav className="flex md:hidden items-center justify-between pt-4 px-6">
-        <h1 className="text-xl font-bold">NAME</h1>
+        <h1 className="text-xl font-bold">DriveChain</h1>
 
         <button
           onClick={() => setOpen((v) => !v)}

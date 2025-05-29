@@ -34,14 +34,14 @@ import { DashboardNav } from "~/components/Dashboard/DashboardNav";
 
 // sidebar definitions
 const ALL_SECTIONS = [
-    { icon: Car, label:'Overview', key: 'overview' },
-    { icon: Wrench, label: 'Maintenance',key: 'maintenance' },
-    { icon: ClipboardCheck,label: 'Diagnostics', key: 'diagnostics' },
-    { icon: ShieldCheck,label: 'Inspections', key: 'inspections' },
-    { icon: Zap,label: 'Accidents', key: 'accidents' },
-    { icon: Users,label: 'Transfer', key: 'admin' },
-    { icon: CirclePlus,label: 'Register', key: 'register' },
-    {icon: History,label: 'Ownership', key: 'ownership'},
+    { icon: Car, label: 'Overview', key: 'overview' },
+    { icon: Wrench, label: 'Maintenance', key: 'maintenance' },
+    { icon: ClipboardCheck, label: 'Diagnostics', key: 'diagnostics' },
+    { icon: ShieldCheck, label: 'Inspections', key: 'inspections' },
+    { icon: Zap, label: 'Accidents', key: 'accidents' },
+    { icon: Users, label: 'Transfer', key: 'admin' },
+    { icon: CirclePlus, label: 'Register', key: 'register' },
+    { icon: History, label: 'Ownership', key: 'ownership' },
 ] as const;
 type SectionKey = typeof ALL_SECTIONS[number]['key'];
 
@@ -64,6 +64,35 @@ export default function Dashboard() {
 
 
     const [section, setSection] = useState<SectionKey>('overview');
+
+
+    useEffect(() => {
+        // only run in browsers with an injected provider
+        if (typeof window.ethereum === "undefined") return;
+
+        // handler for account changes
+        const onAccountsChanged = (accounts: string[]) => {
+            // reset VIN and clear out loaded data
+            setVin("");
+            setMeta(null);
+            setMaint([]);
+            setDiag([]);
+            setInsp([]);
+            setAccs([]);
+            setOhiss([]);
+            setVinError(null);
+
+            // switch back to Overview tab
+            setSection("overview");
+        };
+
+        window.ethereum.on("accountsChanged", onAccountsChanged);
+
+        return () => {
+            window.ethereum.removeListener("accountsChanged", onAccountsChanged);
+        };
+    }, []);
+
 
     // determine visible sidebar icons
     const visibleSections = ALL_SECTIONS.filter(sec => {
@@ -94,6 +123,63 @@ export default function Dashboard() {
             console.log(ownedVh)
         })();
     }, [contract, address]);
+
+
+    // 🔔 Subscribe to on-chain events and refresh data
+    useEffect(() => {
+        if (!contract || !vin) return;
+        const vinBytes = vinToBytes17(vin);
+
+        // subscribe helpers
+        const subMaint = contract.events.MaintenanceAdded(
+            { filter: { vin: vinBytes } },
+            (err: Error, evt: any) => {
+                if (!err) loadAll();
+                else console.error("MaintenanceAdded error", err);
+            }
+        );
+
+        const subDiag = contract.events.DiagnosticAdded(
+            { filter: { vin: vinBytes } },
+            (err: Error, evt: any) => {
+                if (!err) loadAll();
+                else console.error("DiagnosticAdded error", err);
+            }
+        );
+
+        const subInsp = contract.events.InspectionAdded(
+            { filter: { vin: vinBytes } },
+            (err: Error, evt: any) => {
+                if (!err) loadAll();
+                else console.error("InspectionAdded error", err);
+            }
+        );
+
+        const subAcc = contract.events.AccidentReported(
+            { filter: { vin: vinBytes } },
+            (err: Error, evt: any) => {
+                if (!err) loadAll();
+                else console.error("AccidentReported error", err);
+            }
+        );
+
+        const subTrans = contract.events.OwnershipTransferred(
+            { filter: { vin: vinBytes } },
+            (err: Error, evt: any) => {
+                if (!err) loadAll();
+                else console.error("OwnershipTransferred error", err);
+            }
+        );
+
+        // cleanup
+        return () => {
+            subMaint.unsubscribe?.();
+            subDiag.unsubscribe?.();
+            subInsp.unsubscribe?.();
+            subAcc.unsubscribe?.();
+            subTrans.unsubscribe?.();
+        };
+    }, [contract, vin]);
 
     // load data
     const loadAll = async () => {
@@ -132,7 +218,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen max-h-screen bg-[#090C13] text-white">
-           <DashboardNav sections={visibleSections} current={section} onSelect={setSection} /> 
+            <DashboardNav sections={visibleSections} current={section} onSelect={setSection} />
             <main className="flex-1 pb-24 md:pb-4 overflow-y-scroll">
                 <NavBar roleBadge={<RoleBadge role={role!} />} />
                 <div className="m-3">
@@ -192,12 +278,12 @@ function OverviewSection({ meta, address, ohiss, onSelect }: { meta: any, addres
     return <>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             <StatCard label="Year" value={meta.year} icon={ClipboardCheck} onClick={() => onSelect('overview')} />
-            <StatCard label="Miles" value={ meta.mileage} icon={RulerDimensionLineIcon} onClick={() => onSelect('overview')} />
+            <StatCard label="Miles" value={meta.mileage} icon={RulerDimensionLineIcon} onClick={() => onSelect('overview')} />
             <StatCard label="Maintenance" value={meta.maintCnt} icon={Wrench} onClick={() => onSelect('maintenance')} />
             <StatCard label="Diagnostics" value={meta.diagCnt} icon={ClipboardCheck} onClick={() => onSelect('diagnostics')} />
-            <StatCard label="Inspections" value={meta.inspCnt} icon={ShieldCheck} onClick={() => onSelect('inspections')} /> 
+            <StatCard label="Inspections" value={meta.inspCnt} icon={ShieldCheck} onClick={() => onSelect('inspections')} />
             <StatCard label="Accidents" value={meta.accCnt} icon={Zap} onClick={() => onSelect('accidents')} />
-            <StatCard label="Ownership" value={ ohiss.length } icon={History} onClick={() => onSelect('ownership')} />
+            <StatCard label="Ownership" value={ohiss.length} icon={History} onClick={() => onSelect('ownership')} />
         </div>
     </>;
 }

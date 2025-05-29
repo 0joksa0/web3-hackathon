@@ -17,8 +17,8 @@ export function meta({ }: Route.MetaArgs) {
 export function loader({ context }: Route.LoaderArgs) {
     return {
         hero: {
-            header: "CAR DEALER PRESENTATION",
-            desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt quae sint officia enim quam beatae distinctio eligendi neque consequuntur incidunt rerum porro, nostrum inventore eius commodi omnis mollitia quibusdam recusandae.",
+            header: "CAR PASSPORT",
+            desc: "Explore the full digital identity of your vehicle — stored and verified on-chain for transparency, trust, and sustainability.",
         },
         ownershipRecords: {
             "sectionTitle": "Your Vehicle Passport",
